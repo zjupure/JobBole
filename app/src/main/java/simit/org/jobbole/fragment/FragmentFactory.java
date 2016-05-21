@@ -2,6 +2,7 @@ package simit.org.jobbole.fragment;
 
 import android.support.v4.app.Fragment;
 
+import simit.org.jobbole.bean.BlogItem;
 import simit.org.jobbole.config.JobboleConstants;
 
 /**
@@ -27,6 +28,9 @@ public class FragmentFactory {
             /** Resource Channel */
             String oriUrl = JobboleConstants.getOriUrl(channelId);
             fragment = ResourceFragment.newInstance(channelId, oriUrl);
+        }else if(channelId == JobboleConstants.DATE){
+            String url = JobboleConstants.getOriUrl(channelId) + "/tag/shanghai/"; // default city is shanghai
+            fragment = BlogItemsFragment.newInstance(channelId, url);
         }else {
             /** TODO add more custom fragments here according the channelId */
             fragment = BlogItemsFragment.newInstance(channelId);

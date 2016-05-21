@@ -41,15 +41,18 @@ public class DetailActivity extends AppCompatActivity {
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         // get Title
         String title;
-        if(curChannel >= 6){
-            // sub channel
-            String[] titles = getResources().getStringArray(R.array.channel_titles);
-            title = titles[curChannel - JobboleConstants.SUB_OFFSET];
-        }else{
+        if(curChannel < 6){
             // main channel
             String[] titles = getResources().getStringArray(R.array.page_titles);
             title = titles[curChannel];
+        }else if(curChannel < 12){
+            // sub channel
+            String[] titles = getResources().getStringArray(R.array.channel_titles);
+            title = titles[curChannel - JobboleConstants.SUB_OFFSET];
+        }else {
+            title = getIntent().getStringExtra("title");
         }
+
         mToolbar.setTitle(title);
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();

@@ -17,6 +17,7 @@ import simit.org.jobbole.bean.ResItem;
  */
 public class ResItemAdapter extends RecyclerView.Adapter<ResItemAdapter.ItemViewHolder>{
     private List<ResItem> items;
+    private OnItemClickListener mListener;
 
     public ResItemAdapter(List<ResItem> items){
         this.items = items;
@@ -49,8 +50,17 @@ public class ResItemAdapter extends RecyclerView.Adapter<ResItemAdapter.ItemView
         return items != null ? items.size() : 0;
     }
 
+    public void setOnItemClickListener(OnItemClickListener listener){
+        mListener = listener;
+    }
+
+    /** Item onClick interface */
+    public interface OnItemClickListener{
+        void onItemClick(View view, int position);
+    }
+
     /** Veiw Holder for resource items */
-    public static class ItemViewHolder extends RecyclerView.ViewHolder{
+    public class ItemViewHolder extends RecyclerView.ViewHolder{
         TextView mTitle;
         TextView mDescription;
 
@@ -59,6 +69,15 @@ public class ResItemAdapter extends RecyclerView.Adapter<ResItemAdapter.ItemView
 
             mTitle = (TextView) itemView.findViewById(R.id.item_title);
             mDescription = (TextView) itemView.findViewById(R.id.item_description);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(mListener != null){
+                        mListener.onItemClick(v, getLayoutPosition());
+                    }
+                }
+            });
         }
     }
 }

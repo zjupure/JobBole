@@ -3,8 +3,8 @@ package simit.org.jobbole.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -16,14 +16,11 @@ import okhttp3.Response;
 import simit.org.jobbole.bean.BlogItem;
 import simit.org.jobbole.bean.RSSFeed;
 import simit.org.jobbole.bean.RSSItem;
-import simit.org.jobbole.bean.ResHeader;
 import simit.org.jobbole.config.JobboleConstants;
 import simit.org.jobbole.datacenter.DataManager;
 import simit.org.jobbole.datacenter.DbManager;
 import simit.org.jobbole.network.JobboleHttpClient;
 import simit.org.jobbole.parser.DefaultRssParser;
-import simit.org.jobbole.parser.IPageParser;
-import simit.org.jobbole.parser.InfoExtractorProxy;
 
 public class SplashActivity extends AppCompatActivity {
     private static final int CHANNEL_COUNT = 6;

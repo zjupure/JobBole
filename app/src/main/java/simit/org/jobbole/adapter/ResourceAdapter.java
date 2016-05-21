@@ -3,6 +3,7 @@ package simit.org.jobbole.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -19,8 +20,13 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 
+import simit.org.jobbole.activity.DetailActivity;
+import simit.org.jobbole.activity.MainActivity;
 import simit.org.jobbole.activity.R;
+import simit.org.jobbole.activity.SubResActivity;
 import simit.org.jobbole.bean.ResHeader;
+import simit.org.jobbole.bean.ResItem;
+import simit.org.jobbole.config.JobboleConstants;
 
 /**
  * Created by liuchun on 2016/4/17.
@@ -53,6 +59,7 @@ public class ResourceAdapter extends ExpandableRecyclerAdapter<ResourceAdapter.T
     @Override
     public void onBindParentViewHolder(final TitleViewHolder parentViewHolder, final int position, final ParentListItem parentListItem) {
         final ResHeader resHeader = (ResHeader)parentListItem;
+
         // title
         parentViewHolder.mTitle.setText(resHeader.getTitle());
         // icon link
@@ -77,14 +84,36 @@ public class ResourceAdapter extends ExpandableRecyclerAdapter<ResourceAdapter.T
     }
 
     @Override
-    public void onBindChildViewHolder(ItemViewHolder childViewHolder, int position, Object childListItem) {
-        ResHeader.ResItemWrapper wrapper = (ResHeader.ResItemWrapper)childListItem;
+    public void onBindChildViewHolder(ItemViewHolder childViewHolder, int position, final Object childListItem) {
+        final ResHeader.ResItemWrapper wrapper = (ResHeader.ResItemWrapper)childListItem;
         RecyclerView itemWrapper = childViewHolder.mItemWrapper;
         itemWrapper.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(context, DEFAULT_COLUMN);
         itemWrapper.setLayoutManager(layoutManager);
         ResItemAdapter itemAdapter = new ResItemAdapter(wrapper.getItemList());
         itemWrapper.setAdapter(itemAdapter);
+        /** TODO setOnClick Event */
+        itemAdapter.setOnItemClickListener(new ResItemAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                ResItem resItem = wrapper.getItemList().get(position);
+                if(context instanceof MainActivity){
+                    // mainActivity, then start SubResActivity
+                    Intent intent = new Intent(context, SubResActivity.class);
+                    intent.putExtra("title", resItem.getTitle());
+                    intent.putExtra("link", resItem.getLink());
+                    intent.putExtra("channel", JobboleConstants.SUB_SUB_RES_CHANNEL);
+                    context.startActivity(intent);
+                }else if(context instanceof SubResActivity){
+                    // subActivity, then start DetailActivity
+                    Intent intent = new Intent(context, DetailActivity.class);
+                    intent.putExtra("title", resItem.getTitle());
+                    intent.putExtra("link", resItem.getLink());
+                    intent.putExtra("channel", JobboleConstants.SUB_SUB_RES_CHANNEL);
+                    context.startActivity(intent);
+                }
+            }
+        });
     }
 
     public void setOnParentClickListener(OnParentClickListener listener){

@@ -13,6 +13,8 @@ public class BlogItem implements Parcelable {
     private String title;
     // link
     private String link;
+    // icon link
+    private String iconLink;
     // description
     private String description;
     // pubdate
@@ -40,6 +42,14 @@ public class BlogItem implements Parcelable {
 
     public void setLink(String link) {
         this.link = link;
+    }
+
+    public String getIconLink() {
+        return iconLink;
+    }
+
+    public void setIconLink(String iconLink) {
+        this.iconLink = iconLink;
     }
 
     public String getDescription() {

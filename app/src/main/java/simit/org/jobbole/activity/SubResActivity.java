@@ -47,7 +47,7 @@ public class SubResActivity extends AppCompatActivity {
         if(parentChannel == JobboleConstants.RESOURCE){
             fragment = ResourceFragment.newInstance(JobboleConstants.SUB_RES_CHANNEL, link);
         }else {
-            fragment = BlogItemsFragment.newInstance(JobboleConstants.SUB_SUB_RES_CHANNEL);
+            fragment = BlogItemsFragment.newInstance(JobboleConstants.SUB_SUB_RES_CHANNEL, link);
         }
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

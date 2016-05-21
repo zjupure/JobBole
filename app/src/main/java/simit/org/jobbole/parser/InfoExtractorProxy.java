@@ -19,7 +19,8 @@ import simit.org.jobbole.config.JobboleConstants;
 public class InfoExtractorProxy {
     /** BLOG **/
     public static final String BODY_RULE = "body";
-    public static final String SPEC_RULE = "div.p-single";  // hot-topic & group
+    public static final String SPEC_RULE = "div.p-single";  // hot-topic & group & date
+    public static final String RESOURCE_RULE = "article.rpost-entry"; // resource
     public static final String GENERAL_RULE = "div.grid-8"; // others
     public static final String BODY_SCRIPT_RULE = "body > script";
     /** RESOURCE **/
@@ -34,6 +35,10 @@ public class InfoExtractorProxy {
     public static final String RES_ITEM_ICON_RULE = "img";
     public static final String RES_ITEM_TITLE_RULE = "h3";
     public static final String RES_ITEM_DESP_RULE = "p";
+    /** DATE ITEM */
+    public static final String DATE_ITEM_RULE = "li.media";
+    //public static final String DATE_ITEM_ICON = ""
+    public static final String DATE_ITEM_TITLE = "div.media-body h3";
 
     /** extarct validate information from html source code */
     public static String extractBlog(String html, int channel){
@@ -42,8 +47,11 @@ public class InfoExtractorProxy {
         Element body = doc.select(BODY_RULE).first();
         Element div;
 
-        if(channel == JobboleConstants.HOT_TOPIC || channel == JobboleConstants.GROUP){
+        if(channel == JobboleConstants.HOT_TOPIC || channel == JobboleConstants.GROUP ||
+                channel == JobboleConstants.DATE){
             div = doc.select(SPEC_RULE).first();
+        }else if(channel == JobboleConstants.RESOURCE || channel == JobboleConstants.SUB_SUB_RES_CHANNEL){
+            div = doc.select(RESOURCE_RULE).first();
         }else {
             div = doc.select(GENERAL_RULE).first();
         }
@@ -128,7 +136,55 @@ public class InfoExtractorProxy {
         List<BlogItem> blogItems = new ArrayList<>();
 
         Document doc = Jsoup.parse(html);
-        /** TODO extract the resource item list **/
+        Elements elements = doc.select(RES_ITEM_DETAIL_RULE);
+        for(Element element : elements){
+            /** 遍历所有的资源 */
+            BlogItem item = new BlogItem();
+            Element icon = element.select(RES_ITEM_ICON_RULE).first();
+            String iconLink = icon.attr("src");
+
+            Element h3 = element.select(RES_ITEM_TITLE_RULE).first();
+            String title = h3.text();
+            Element title_link = h3.select("a").first();
+            String link = title_link.attr("href");
+
+            Element p = element.select(RES_ITEM_DESP_RULE).first();
+            String desp = p.text();
+            //
+            item.setTitle(title);
+            item.setDescription(desp);
+            item.setLink(link);
+            item.setIconLink(iconLink);
+            //
+            blogItems.add(item);
+        }
+
+        return blogItems;
+    }
+
+    /** 提取相亲页面 */
+    public static List<BlogItem> extractDateInfos(String html){
+        List<BlogItem> blogItems = new ArrayList<>();
+
+        Document doc = Jsoup.parse(html);
+        Elements elements = doc.select(DATE_ITEM_RULE);
+        for(Element element : elements){
+            /** 遍历所有的资源 */
+            BlogItem item = new BlogItem();
+            Element h3 = element.select(DATE_ITEM_TITLE).first();
+            String title = h3.text();
+            Element title_link = h3.select("a").first();
+            String link = title_link.attr("href");
+
+            if(title.equals("觉得积分很难拿？除了签到，推荐一个更好的方式~")){
+                continue; // this is advertisement
+            }
+
+            item.setTitle(title);
+            item.setLink(link);
+            //
+            blogItems.add(item);
+        }
 
         return blogItems;
     }

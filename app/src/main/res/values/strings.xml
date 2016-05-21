@@ -13,4 +13,6 @@
     <string name="ios_channel">IOS应用</string>
 
     <string name="nonexist_message">当前频道无Feed，请前往官网浏览</string>
+
+    <string name="splash_welcome">Welcome to JobBole</string>
 </resources>

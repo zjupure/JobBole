@@ -86,10 +86,18 @@ public class ResourceFragment extends Fragment {
                 ResHeader resHeader = (ResHeader)parentListItem;
                 String title = resHeader.getTitle();
                 String link = resHeader.getLink();
+
                 Intent intent = new Intent(getActivity(), SubResActivity.class);
                 intent.putExtra("title", title);
                 intent.putExtra("link", link);
-                intent.putExtra("channel", curChannel);
+
+                if(position == mAdapter.getParentItemList().size() - 1){
+                    // last position
+                    intent.putExtra("channel", JobboleConstants.SUB_RES_CHANNEL);
+                }else {
+                    intent.putExtra("channel", curChannel);
+                }
+
                 startActivity(intent);
             }
         });

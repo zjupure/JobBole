@@ -1,12 +1,16 @@
 package simit.org.jobbole.adapter;
 
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 
@@ -45,13 +49,28 @@ public class RSSRecyclerAdapter extends RecyclerView.Adapter<RSSRecyclerAdapter.
         Log.d("rssItem", "title: " + title);
         //
         String description = item.getDescription();
-        holder.mDescription.setText(Html.fromHtml(description));
-        Log.d("rssItem", "description: " + description);
-
+        if(TextUtils.isEmpty(description)){
+            holder.mDescription.setVisibility(View.GONE);
+        }else {
+            holder.mDescription.setText(Html.fromHtml(description));
+            Log.d("rssItem", "description: " + description);
+        }
         //String normDate = JobUtil.toDisplayTime(item.getPubDate());
         String pubDate = item.getPubDate();
-        holder.mPubDate.setText(pubDate);
-        Log.d("rssItem", "pubDate: " + pubDate);
+        if(!TextUtils.isEmpty(pubDate)){
+            holder.mPubDate.setVisibility(View.VISIBLE);
+            holder.mPubDate.setText(pubDate);
+            Log.d("rssItem", "pubDate: " + pubDate);
+        }
+
+
+        // display icon in the left
+        String iconLink = item.getIconLink();
+        if(!TextUtils.isEmpty(iconLink)){
+            holder.mIcon.setVisibility(View.VISIBLE);
+            holder.mIcon.setImageURI(Uri.parse(iconLink));
+            Log.d("rssItem", "iconLink: " + iconLink);
+        }
     }
 
     @Override
@@ -68,6 +87,7 @@ public class RSSRecyclerAdapter extends RecyclerView.Adapter<RSSRecyclerAdapter.
 
     /** ViewHolder容器类 */
     public class ViewHolder extends RecyclerView.ViewHolder{
+        public SimpleDraweeView mIcon;
         public TextView mTitle;
         public TextView mDescription;
         public TextView mPubDate;
@@ -75,6 +95,7 @@ public class RSSRecyclerAdapter extends RecyclerView.Adapter<RSSRecyclerAdapter.
         public ViewHolder(View itemView) {
             super(itemView);
             //
+            mIcon = (SimpleDraweeView) itemView.findViewById(R.id.item_icon);
             mTitle = (TextView) itemView.findViewById(R.id.item_title);
             mDescription = (TextView) itemView.findViewById(R.id.item_description);
             mPubDate = (TextView) itemView.findViewById(R.id.item_time);

@@ -19,8 +19,10 @@ import android.view.ViewStub;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.Response;
 import simit.org.jobbole.activity.DetailActivity;
 import simit.org.jobbole.activity.R;
 import simit.org.jobbole.activity.SplashActivity;
@@ -30,6 +32,8 @@ import simit.org.jobbole.bean.RSSFeed;
 import simit.org.jobbole.config.JobboleConstants;
 import simit.org.jobbole.datacenter.DataManager;
 import simit.org.jobbole.network.JobboleHttpClient;
+import simit.org.jobbole.parser.IPageParser;
+import simit.org.jobbole.parser.InfoExtractorProxy;
 
 /**
  * Created by liuchun on 2016/3/31.
@@ -44,6 +48,7 @@ public class BlogItemsFragment extends Fragment {
     private List<BlogItem> blogItems;
     // current page indicator
     private int curChannel = 0;
+    private String link = "";
 
     public static Fragment newInstance(int channelId){
         return newInstance(channelId, "");
@@ -59,20 +64,28 @@ public class BlogItemsFragment extends Fragment {
         return fragment;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //
+        if(curChannel == JobboleConstants.DATE){
+            setHasOptionsMenu(true);
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_rssitems, container, false);
-        // get args
-        curChannel = getArguments().getInt(JobboleConstants.CHANNEL_NAME, 0);
-        //link = getArguments().getString(JobboleConstants.CHANNEL_LINK);
 
-        return rootView;
+        return inflater.inflate(R.layout.fragment_rssitems, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        // get args
+        curChannel = getArguments().getInt(JobboleConstants.CHANNEL_NAME, 0);
+        link = getArguments().getString(JobboleConstants.CHANNEL_LINK);
         // View initialization
         initViews(getView());
     }
@@ -82,7 +95,7 @@ public class BlogItemsFragment extends Fragment {
         mRefreshView = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_layout);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         /** TODO deal with special cases, need fixed later */
-        if(curChannel == JobboleConstants.SUB_JAVA || curChannel == JobboleConstants.DATE){
+        if(curChannel == JobboleConstants.SUB_JAVA){
             mRefreshView.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.GONE);
             // inflate the viewstub
@@ -104,6 +117,13 @@ public class BlogItemsFragment extends Fragment {
             @Override
             public void onRefresh() {
                 /** TODO refreshing operation */
+                if(curChannel == JobboleConstants.SUB_SUB_RES_CHANNEL ||
+                        curChannel == JobboleConstants.DATE){
+                    // fetch data from network
+                    JobboleHttpClient.getPageSource(link, new ResInfoExtractor());
+                    return;
+                }
+                // other channels
                 final String feedUrl = JobboleConstants.getFeedUrl(curChannel);
                 if(TextUtils.isEmpty(feedUrl)){
                     mRefreshView.setRefreshing(false);
@@ -132,9 +152,19 @@ public class BlogItemsFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), DetailActivity.class);
                 intent.putExtra(JobboleConstants.CHANNEL_NAME, curChannel);
                 intent.putExtra("link", link);
+                if(curChannel == JobboleConstants.SUB_SUB_RES_CHANNEL){
+                    String[] titles = item.getTitle().split("：");
+                    intent.putExtra("title", titles[0]);
+                }
+
                 startActivity(intent);
             }
         });
+        // if it is sub Res channel or date, then fetch data from network
+        if(curChannel == JobboleConstants.SUB_SUB_RES_CHANNEL
+                || curChannel == JobboleConstants.DATE){
+            JobboleHttpClient.getPageSource(link, new ResInfoExtractor());
+        }
     }
 
     /** show toast */
@@ -158,7 +188,7 @@ public class BlogItemsFragment extends Fragment {
             mRefreshView.setRefreshing(false);
             mAdapter.notifyDataSetChanged();
             //
-            showToast("刷新成功");
+            //showToast("刷新成功");
         }
 
         @Override
@@ -166,7 +196,45 @@ public class BlogItemsFragment extends Fragment {
             super.onFailure(e);
             mRefreshView.setRefreshing(false);
             //
-            showToast("网络访问出错");
+            //showToast("网络访问出错");
+        }
+    }
+
+    /** 从资源页面抓取信息 */
+    public class ResInfoExtractor implements IPageParser<String>{
+        @Override
+        public String parse(Response response) throws Exception {
+
+            String html = response.body().string();
+            List<BlogItem> items = new ArrayList<>();
+
+            if(curChannel == JobboleConstants.SUB_SUB_RES_CHANNEL){
+                items = InfoExtractorProxy.extractResInfos(html);
+            }else if(curChannel == JobboleConstants.DATE){
+                items = InfoExtractorProxy.extractDateInfos(html);
+            }
+            //
+            blogItems.clear();
+            blogItems.addAll(items);
+
+            return html;
+        }
+
+        @Override
+        public void onSuccess(String response) {
+            Log.d("Date Extractor", "date page");
+            mRefreshView.setRefreshing(false);
+            mAdapter.notifyDataSetChanged();
+            //
+            //showToast("刷新成功");
+        }
+
+        @Override
+        public void onFailure(Exception e) {
+
+            mRefreshView.setRefreshing(false);
+            //
+            //showToast("网络访问出错");
         }
     }
 }
