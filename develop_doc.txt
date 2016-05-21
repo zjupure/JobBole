@@ -1,0 +1,27 @@
+伯乐在线Android客户端设计
+
+项目需求
+	实现伯乐在线的手机客户端阅读app
+	伯乐在线主页：http://www.jobbole.com/
+
+技术实现
+	采用Google原生Material Design控件设计UI
+	采用开源组件进行快速开发
+		网络请求：Square的Okhttp，https://github.com/square/okhttp
+		图片缓存：Facebook的Fresco，https://github.com/facebook/fresco
+	伯乐在线只有RSS订阅源，需要自己解析XML，默认选用PULL解析器
+
+主要栏目
+	头条：http://top.jobbole.com/feed/
+	文章（博客）：http://blog.jobbole.com/feed/
+	频道：细分多个子栏目
+		设计：http://design.jobbole.com/feed/
+		Web前端：http://web.jobbole.com/feed/
+		Python开发者：http://python.jobbole.com/feed/
+		Java技术：ImportNew，无Feed
+		Android开发：http://android.jobbole.com/feed/
+		IOS开发：http://ios.jobbole.com/feed/
+	资源：细分多个子栏目，无Feed，http://hao.jobbole.com/
+	小组：http://group.jobbole.com/feed/
+	面向对象：无Feed，http://date.jobbole.com/
+

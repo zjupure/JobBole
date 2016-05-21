@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#00BCD4</color>
+    <color name="colorPrimaryDark">#039BE5</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="textColorPrimary">#212121</color>
+    <color name="textColorSecondary">#727272</color>
+    <color name="dividerColor">#B6B6B6</color>
+    <color name="textBackgroundColor">#FFFFFF</color>
+
+    <!-- TabLayout and Tabs -->
+    <color name="tabBackgroundColor">#4DD0E1</color>
+    <color name="tabIndicatorColor">#039BE5</color>
+    <color name="tabSelectedTextColor">#FFFFFF</color>
+    <color name="tabTextColor">#616161</color>
+
+    <!-- Navigation View and Menus -->
+    <color name="navHeaderColor">#4DD0E1</color>
+    <color name="navItemColor">#FFFFFF</color>
+    <color name="navItemTextColor">#000000</color>
+    <color name="navItemIconColor">#FF8F00</color>
+
+    <!-- Sub Channel Button Color -->
+    <color name="checkBorderColor">#00BCD4</color>
+    <color name="checkColor">#4CAF50</color>
+    <color name="uncheckBorderColor">#4DD0E1</color>
+    <color name="uncheckColor">#AED581</color>
+    <color name="blueLight">#81D4FA</color>
+    <color name="divider_gray">#9E9E9E</color>
+
+    <color name="res_header_color">#BDBDBD</color>
+    <color name="res_item_color">#D7CCC8</color>
+</resources>

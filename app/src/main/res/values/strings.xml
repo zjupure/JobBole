@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">伯乐在线</string>
+
+    <string name="share_action">分享</string>
+    <string name="favorite_action">收藏</string>
+
+    <!-- Channel List -->
+    <string name="design_channel">设计频道</string>
+    <string name="web_channel">Web前端</string>
+    <string name="python_channel">Python开发</string>
+    <string name="java_channel">Java技术</string>
+    <string name="android_channel">Android应用</string>
+    <string name="ios_channel">IOS应用</string>
+
+    <string name="nonexist_message">当前频道无Feed，请前往官网浏览</string>
+</resources>

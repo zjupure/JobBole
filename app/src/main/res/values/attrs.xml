@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--  custom RadioGroup derived from GridLayout -->
+    <declare-styleable name="RadioGroup">
+        <attr name="checkedButton" format="integer" />
+    </declare-styleable>
+</resources>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <simit.org.jobbole.widget.RadioGroup
+        android:id="@+id/grid_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bottom_line_background"
+        app:elevation="3dp"
+        app:useDefaultMargins="true"
+        app:columnCount="3">
+
+        <RadioButton
+            android:id="@+id/design_channel_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
+            android:text="@string/design_channel"
+            android:checked="true"
+            style="@style/channelButton" />
+
+        <RadioButton
+            android:id="@+id/web_channel_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
+            android:text="@string/web_channel"
+            style="@style/channelButton"/>
+
+        <RadioButton
+            android:id="@+id/python_channel_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
+            android:text="@string/python_channel"
+            style="@style/channelButton"/>
+
+        <RadioButton
+            android:id="@+id/java_channel_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
+            android:text="@string/java_channel"
+            style="@style/channelButton"/>
+
+        <RadioButton
+            android:id="@+id/android_channel_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
+            android:text="@string/android_channel"
+            style="@style/channelButton"/>
+
+        <RadioButton
+            android:id="@+id/ios_channel_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
+            android:text="@string/ios_channel"
+            style="@style/channelButton"/>
+    </simit.org.jobbole.widget.RadioGroup>
+
+    <FrameLayout
+        android:id="@+id/sub_channel_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/grid_container">
+
+    </FrameLayout>
+</RelativeLayout>
