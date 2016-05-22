@@ -4,6 +4,11 @@
     <string name="share_action">分享</string>
     <string name="favorite_action">收藏</string>
 
+    <string name="city">城市</string>
+    <string name="current_city">上海</string>
+    <string name="current_loc_city">当前定位城市</string>
+    <string name="all_cities">全部城市</string>
+    <string name="nation">全国</string>
     <!-- Channel List -->
     <string name="design_channel">设计频道</string>
     <string name="web_channel">Web前端</string>

@@ -37,8 +37,8 @@ public class InfoExtractorProxy {
     public static final String RES_ITEM_DESP_RULE = "p";
     /** DATE ITEM */
     public static final String DATE_ITEM_RULE = "li.media";
-    //public static final String DATE_ITEM_ICON = ""
     public static final String DATE_ITEM_TITLE = "div.media-body h3";
+    public static final String DATE_ITEM_DESP = "div.media-body p";
 
     /** extarct validate information from html source code */
     public static String extractBlog(String html, int channel){
@@ -150,6 +150,11 @@ public class InfoExtractorProxy {
 
             Element p = element.select(RES_ITEM_DESP_RULE).first();
             String desp = p.text();
+            // remove 详细介绍
+            int index = desp.indexOf("详细介绍");
+            if(index > 0){
+                desp = desp.substring(0, index);
+            }
             //
             item.setTitle(title);
             item.setDescription(desp);
@@ -173,15 +178,18 @@ public class InfoExtractorProxy {
             BlogItem item = new BlogItem();
             Element h3 = element.select(DATE_ITEM_TITLE).first();
             String title = h3.text();
-            Element title_link = h3.select("a").first();
-            String link = title_link.attr("href");
-
             if(title.equals("觉得积分很难拿？除了签到，推荐一个更好的方式~")){
                 continue; // this is advertisement
             }
 
+            Element title_link = h3.select("a").first();
+            String link = title_link.attr("href");
+            Element p = element.select(DATE_ITEM_DESP).first();
+            String desp = p.text();
+
             item.setTitle(title);
             item.setLink(link);
+            item.setDescription(desp);
             //
             blogItems.add(item);
         }

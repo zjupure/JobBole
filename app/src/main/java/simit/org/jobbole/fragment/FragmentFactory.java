@@ -29,7 +29,8 @@ public class FragmentFactory {
             String oriUrl = JobboleConstants.getOriUrl(channelId);
             fragment = ResourceFragment.newInstance(channelId, oriUrl);
         }else if(channelId == JobboleConstants.DATE){
-            String url = JobboleConstants.getOriUrl(channelId) + "/tag/shanghai/"; // default city is shanghai
+            //String url = JobboleConstants.getOriUrl(channelId) + "/tag/shanghai/"; // default city is shanghai
+            String url = JobboleConstants.getOriUrl(channelId);
             fragment = BlogItemsFragment.newInstance(channelId, url);
         }else {
             /** TODO add more custom fragments here according the channelId */

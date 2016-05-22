@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_loctext"
+        android:title="@string/city"
+        app:showAsAction="always|withText"/>
+
+    <item
+        android:id="@+id/action_loc"
+        android:title="@string/city"
+        android:icon="@mipmap/ic_location"
+        app:showAsAction="always|withText"/>
+</menu>

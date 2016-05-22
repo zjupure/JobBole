@@ -1,5 +1,6 @@
 package simit.org.jobbole.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,6 +14,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
@@ -49,6 +53,7 @@ public class BlogItemsFragment extends Fragment {
     // current page indicator
     private int curChannel = 0;
     private String link = "";
+    private String cityTag = "";
 
     public static Fragment newInstance(int channelId){
         return newInstance(channelId, "");
@@ -62,15 +67,6 @@ public class BlogItemsFragment extends Fragment {
         fragment.setArguments(args);
 
         return fragment;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //
-        if(curChannel == JobboleConstants.DATE){
-            setHasOptionsMenu(true);
-        }
     }
 
     @Nullable
@@ -117,11 +113,13 @@ public class BlogItemsFragment extends Fragment {
             @Override
             public void onRefresh() {
                 /** TODO refreshing operation */
-                if(curChannel == JobboleConstants.SUB_SUB_RES_CHANNEL ||
-                        curChannel == JobboleConstants.DATE){
+                if(curChannel == JobboleConstants.SUB_SUB_RES_CHANNEL){
                     // fetch data from network
                     JobboleHttpClient.getPageSource(link, new ResInfoExtractor());
                     return;
+                }else if(curChannel == JobboleConstants.DATE){
+                    // fetch data from network
+                    updateCity(cityTag);
                 }
                 // other channels
                 final String feedUrl = JobboleConstants.getFeedUrl(curChannel);
@@ -167,6 +165,20 @@ public class BlogItemsFragment extends Fragment {
         }
     }
 
+    /** get page source according to different cityTag */
+    public void updateCity(String cityTag){
+        String format = JobboleConstants.getOriUrl(curChannel) + "/tag/%s/";
+        String url = String.format(format, cityTag);
+
+        if(TextUtils.isEmpty(cityTag)){
+            //全国
+            url = JobboleConstants.getOriUrl(curChannel);
+        }
+        this.cityTag = cityTag;
+
+        JobboleHttpClient.getPageSource(url, new ResInfoExtractor());
+    }
+
     /** show toast */
     private void showToast(CharSequence text){
         if(getActivity() != null){
@@ -185,18 +197,22 @@ public class BlogItemsFragment extends Fragment {
         public void onSuccess(RSSFeed response) {
             super.onSuccess(response);
             //
-            mRefreshView.setRefreshing(false);
             mAdapter.notifyDataSetChanged();
             //
-            //showToast("刷新成功");
+            if(mRefreshView.isRefreshing()){
+                mRefreshView.setRefreshing(false);
+                showToast("刷新成功");
+            }
         }
 
         @Override
         public void onFailure(Exception e) {
             super.onFailure(e);
-            mRefreshView.setRefreshing(false);
-            //
-            //showToast("网络访问出错");
+
+            showToast("网络访问出错");
+            if(mRefreshView.isRefreshing()){
+                mRefreshView.setRefreshing(false);
+            }
         }
     }
 
@@ -223,18 +239,22 @@ public class BlogItemsFragment extends Fragment {
         @Override
         public void onSuccess(String response) {
             Log.d("Date Extractor", "date page");
-            mRefreshView.setRefreshing(false);
+            //
             mAdapter.notifyDataSetChanged();
             //
-            //showToast("刷新成功");
+            if(mRefreshView.isRefreshing()){
+                mRefreshView.setRefreshing(false);
+                showToast("刷新成功");
+            }
         }
 
         @Override
         public void onFailure(Exception e) {
 
-            mRefreshView.setRefreshing(false);
-            //
-            //showToast("网络访问出错");
+            showToast("网络访问出错");
+            if(mRefreshView.isRefreshing()){
+                mRefreshView.setRefreshing(false);
+            }
         }
     }
 }

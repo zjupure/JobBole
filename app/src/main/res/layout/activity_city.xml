@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/toolbar_layout" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/divider_line_background"
+        android:padding="16dp">
+        <TextView
+            android:id="@+id/current_loc_city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingRight="10dp"
+            android:gravity="center_vertical"
+            android:textSize="16sp"
+            android:text="@string/current_loc_city"/>
+
+        <TextView
+            android:id="@+id/location_city"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/current_loc_city"
+            android:background="@drawable/city_btn_background"
+            android:padding="10dp"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textColor="@color/textColorPrimary"
+            android:text="@string/current_city"/>
+
+        <TextView
+            android:id="@+id/all_city"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/city_btn_background"
+            android:padding="10dp"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textColor="@color/textColorPrimary"
+            android:text="@string/nation"/>
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="10dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:textSize="14sp"
+                android:text="@string/all_cities"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingRight="16dp"/>
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
