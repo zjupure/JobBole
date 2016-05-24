@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import simit.org.jobbole.adapter.MainViewPagerAdapter;
+import simit.org.jobbole.config.JobboleConstants;
 import simit.org.jobbole.fragment.BlogItemsFragment;
 import simit.org.jobbole.fragment.FragmentFactory;
 import simit.org.jobbole.utility.JobUtil;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private int curPage = 0;
     // curCityName
     private String cityName = "全国";
+    private String cityTag = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,20 +143,26 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if(resultCode == RESULT_OK && requestCode == LOC_REQUEST_CODE){
-            if(curPage == CHANNEL_COUNT - 1){
+            if(curPage == JobboleConstants.DATE){
                 String cityName = data.getStringExtra("cityName");
                 String cityTag = data.getStringExtra("cityTag");
+
                 BlogItemsFragment fragment = (BlogItemsFragment)fragments.get(curPage);
                 fragment.updateCity(cityTag);
                 //
                 if(!TextUtils.isEmpty(cityName)){
                     this.cityName = cityName;
+                    this.cityTag = cityTag;
                     invalidateOptionsMenu();
                 }
             }
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public String getCityTag(){
+        return cityTag;
     }
 
     /** initial the Navigation View */
@@ -181,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
         /** TODO initial the view pager fragments */
         for(int i = 0; i < CHANNEL_COUNT; i++){
             Fragment frag = FragmentFactory.createFragment(i);
+
             fragments.add(frag);
         }
 

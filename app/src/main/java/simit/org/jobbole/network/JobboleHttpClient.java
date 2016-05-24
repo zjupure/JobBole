@@ -3,8 +3,12 @@ package simit.org.jobbole.network;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
+
+import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -12,6 +16,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import simit.org.jobbole.bean.RSSFeed;
+import simit.org.jobbole.locationbean.AddrWrapper;
+import simit.org.jobbole.locationbean.FullAddress;
+import simit.org.jobbole.locationbean.ShortAddr;
 import simit.org.jobbole.parser.IPageParser;
 
 /**
@@ -47,6 +54,24 @@ public class JobboleHttpClient {
     /** 返回Hander发送消息 */
     private static Handler getHandler(){
         return getInstance().handler;
+    }
+
+    /** Synchronous Get */
+    public static String syncGet(String url){
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        //
+        try{
+            Response response = getClient().newCall(request).execute();
+
+            return response.body().string();
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+        return "";
     }
 
     /** Synchronous Get */
@@ -118,5 +143,40 @@ public class JobboleHttpClient {
     /** 获取HTML页面信息 */
     public static void getPageSource(String url, IPageParser<String> parser){
         asynGet(url, parser);
+    }
+
+    public static String getCityName(String url){
+        String json = syncGet(url);
+        String cityName = "";
+        if(!TextUtils.isEmpty(json)){
+            Gson gson = new Gson();
+            AddrWrapper addrWrapper = gson.fromJson(json, AddrWrapper.class);
+
+            if(addrWrapper != null){
+                cityName = extractCityName(addrWrapper);
+            }
+        }
+
+        return cityName;
+    }
+
+    private static String extractCityName(AddrWrapper addrWrapper){
+        String cityName = "北京";
+
+        List<FullAddress> results = addrWrapper.getResults();
+        for(FullAddress fullAddress : results){
+            List<ShortAddr> shortAddrs = fullAddress.getAddress_components();
+            for(ShortAddr addr : shortAddrs){
+                if(addr.getTypes().get(0).equals("locality")){
+                    cityName = addr.getLong_name();
+                    if(cityName.contains("市")){
+                        cityName = cityName.substring(0, cityName.indexOf("市"));
+                    }
+                    return  cityName;
+                }
+            }
+        }
+
+        return cityName;
     }
 }

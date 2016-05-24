@@ -70,7 +70,8 @@
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingRight="16dp"/>
+                android:paddingRight="16dp"
+                android:paddingBottom="16dp"/>
         </LinearLayout>
 
     </ScrollView>

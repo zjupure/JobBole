@@ -25,9 +25,11 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.Response;
 import simit.org.jobbole.activity.DetailActivity;
+import simit.org.jobbole.activity.MainActivity;
 import simit.org.jobbole.activity.R;
 import simit.org.jobbole.activity.SplashActivity;
 import simit.org.jobbole.adapter.RSSRecyclerAdapter;
@@ -53,7 +55,6 @@ public class BlogItemsFragment extends Fragment {
     // current page indicator
     private int curChannel = 0;
     private String link = "";
-    private String cityTag = "";
 
     public static Fragment newInstance(int channelId){
         return newInstance(channelId, "");
@@ -82,6 +83,19 @@ public class BlogItemsFragment extends Fragment {
         // get args
         curChannel = getArguments().getInt(JobboleConstants.CHANNEL_NAME, 0);
         link = getArguments().getString(JobboleConstants.CHANNEL_LINK);
+
+        if(curChannel == JobboleConstants.DATE){
+            // update the link according to the cityTag
+            if(getActivity() instanceof MainActivity){
+                String cityTag = ((MainActivity)getActivity()).getCityTag();
+                String format = JobboleConstants.getOriUrl(curChannel) + "/tag/%s/";
+
+                if(!TextUtils.isEmpty(cityTag)){
+                    link = String.format(Locale.getDefault(), format, cityTag);
+                }
+            }
+        }
+
         // View initialization
         initViews(getView());
     }
@@ -113,13 +127,11 @@ public class BlogItemsFragment extends Fragment {
             @Override
             public void onRefresh() {
                 /** TODO refreshing operation */
-                if(curChannel == JobboleConstants.SUB_SUB_RES_CHANNEL){
+                if(curChannel == JobboleConstants.SUB_SUB_RES_CHANNEL ||
+                        curChannel == JobboleConstants.DATE){
                     // fetch data from network
                     JobboleHttpClient.getPageSource(link, new ResInfoExtractor());
                     return;
-                }else if(curChannel == JobboleConstants.DATE){
-                    // fetch data from network
-                    updateCity(cityTag);
                 }
                 // other channels
                 final String feedUrl = JobboleConstants.getFeedUrl(curChannel);
@@ -174,9 +186,9 @@ public class BlogItemsFragment extends Fragment {
             //全国
             url = JobboleConstants.getOriUrl(curChannel);
         }
-        this.cityTag = cityTag;
 
         JobboleHttpClient.getPageSource(url, new ResInfoExtractor());
+        link = url;  // update args
     }
 
     /** show toast */
