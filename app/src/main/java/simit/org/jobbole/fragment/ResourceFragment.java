@@ -91,13 +91,12 @@ public class ResourceFragment extends Fragment {
                 intent.putExtra("title", title);
                 intent.putExtra("link", link);
 
-                if(position == mAdapter.getParentItemList().size() - 1){
+                if(resHeader.getTitle().equals("Linux/Unix")){
                     // last position
                     intent.putExtra("channel", JobboleConstants.SUB_RES_CHANNEL);
                 }else {
                     intent.putExtra("channel", curChannel);
                 }
-
                 startActivity(intent);
             }
         });

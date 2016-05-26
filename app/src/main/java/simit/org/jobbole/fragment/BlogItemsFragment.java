@@ -37,6 +37,7 @@ import simit.org.jobbole.bean.BlogItem;
 import simit.org.jobbole.bean.RSSFeed;
 import simit.org.jobbole.config.JobboleConstants;
 import simit.org.jobbole.datacenter.DataManager;
+import simit.org.jobbole.datacenter.DbManager;
 import simit.org.jobbole.network.JobboleHttpClient;
 import simit.org.jobbole.parser.IPageParser;
 import simit.org.jobbole.parser.InfoExtractorProxy;
@@ -52,6 +53,8 @@ public class BlogItemsFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private RSSRecyclerAdapter mAdapter;
     private List<BlogItem> blogItems;
+    //
+    private int limit = 30;
     // current page indicator
     private int curChannel = 0;
     private String link = "";
@@ -127,6 +130,7 @@ public class BlogItemsFragment extends Fragment {
             @Override
             public void onRefresh() {
                 /** TODO refreshing operation */
+                limit += 10;
                 if(curChannel == JobboleConstants.SUB_SUB_RES_CHANNEL ||
                         curChannel == JobboleConstants.DATE){
                     // fetch data from network

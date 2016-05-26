@@ -3,7 +3,6 @@ package simit.org.jobbole.datacenter;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
